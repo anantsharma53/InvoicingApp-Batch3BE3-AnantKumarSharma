@@ -8,23 +8,23 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
-invoices = [{
-        "invoice_id": 1,
-        "client_name": "Anant Sharma",
-        "date": "2023-05-30",
-        "items": [
-            {
-                "desc": "product 1",
-                "rate": 100.00,
-                "quantity": 2,
-            }
-        ],
-    }]
-user=[{
-    "user_id":1,
-    "email":"abc@gmail.com",
-    "password":"abc123",
-}]
+# invoices = [{
+#         "invoice_id": 1,
+#         "client_name": "Anant Sharma",
+#         "date": "2023-05-30",
+#         "items": [
+#             {
+#                 "desc": "product 1",
+#                 "rate": 100.00,
+#                 "quantity": 2,
+#             }
+#         ],
+#     }]
+# user=[{
+#     "user_id":1,
+#     "email":"abc@gmail.com",
+#     "password":"abc123",
+# }]
 class create_invoice(APIView):
     def post(self,request):
         print(request.data)
