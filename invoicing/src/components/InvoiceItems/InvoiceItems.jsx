@@ -8,7 +8,7 @@ export default function InvoiceForm() {
   const [invoice, setInvoice] = useState({})
   const [totalAmount, setTotalAmount] = useState(0)
   const params = useParams()
-console.log(params.id)
+// console.log(params.id)
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/invoices/' + params.id +'/')
       .then((res) => res.json())
@@ -25,8 +25,8 @@ console.log(params.id)
             },
             0,
           )
-          console.log(totalPrice)
-          setTotalAmount(totalPrice)
+          // console.log(totalPrice)
+          setTotalAmount(totalPrice.toFixed(2))
         }
       })
   }, [])
@@ -64,7 +64,7 @@ console.log(params.id)
       <br />
       <br />
       <a
-        href={invoice.invoice_id + '/newItem'}
+        href={invoice.id + '/newItem'}
         className="float-start btn btn-warning"
       >
         New Item

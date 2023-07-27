@@ -1,17 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../NavBar/Navbar'
 import './InvoiceForm.css'
-
+import jwtDecode from 'jwt-decode';
 export default function InvoiceForm() {
   const [newInvoice, setNewInvoice] = useState({})
+  const [user_Id, setUserId] = useState(null);
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    // console.log(token);
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        if (decodedToken && decodedToken.user_id) {
+          // console.log(decodedToken.user_id)
+          setUserId(decodedToken.user_id); // Set the user_id in the separate state
+        }
+      } catch (error) {
+        // Handle any error that occurs during token decoding, if necessary
+      }
+    }
+  }, []);
+
   function handleSubmit() {
-    newInvoice.items = []
+    const invoiceData = { ...newInvoice, user: user_Id };
+    // console.log(invoiceData);
+    invoiceData.items = [];
     fetch('http://127.0.0.1:8000/api/invoices/new/', {
       method: 'POST',
-      body: JSON.stringify(newInvoice),
+      body: JSON.stringify(invoiceData),
       headers: {
         'Content-Type': 'application/json',
       },

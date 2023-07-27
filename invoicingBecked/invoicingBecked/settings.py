@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,7 +40,24 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_api',
     'corsheaders',
+    'rest_framework_simplejwt',
 ]
+SIMPLE_JWT = {
+    # Set the token expiration time for access token (default is 5 minutes)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Change this value as desired
+
+    # Set the token expiration time for refresh token (default is 1 day)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Change this value as desired
+
+    # Allow refreshing of the access token even if it is expired (default is False)
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(minutes=120),  # Change this value as desired
+
+    # Set the maximum allowable age of a refresh token before it is considered expired
+    'SLIDING_TOKEN_REFRESH_EXPIRATION': timedelta(days=1),  # Change this value as desired
+}
+
+# Optionally, you can set the token's timestamp claim to be 'iat' (issued at time) instead of 'nbf' (not before time)
+# SIMPLE_JWT['TOKEN_IAT_CLAIM'] = 'iat'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,8 +100,13 @@ WSGI_APPLICATION = 'invoicingBecked.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'invoice',
+        'HOST':'127.0.0.1',
+        'PORT':'27017',
+        'USERNAME':'user',
+        'PASSWORD':'password',
+        'AUTH_SOURCE':'admin'
     }
 }
 
@@ -129,3 +151,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL='rest_api.User'
+REST_FRAMEWORK={
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ]
+}

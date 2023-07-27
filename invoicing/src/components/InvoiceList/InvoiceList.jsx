@@ -16,9 +16,25 @@ export default function InvoiceList() {
             0,
           )
         })
-        console.log(invoices)
+        // console.log(invoices)
       })
   }, [])
+  const deleteItem = (invoicesId) => {
+    fetch('http://127.0.0.1:8000/api/invoices/del/' + invoicesId,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((results) => {
+        if (results.ok) {
+          // console.log('invoice deleted')
+          setInvoices((prevInvoices) => prevInvoices.filter((invoice) => invoice.id !== invoicesId));
+        }
+      })
+
+  }
 
   return (
     <div className="container">
@@ -30,23 +46,33 @@ export default function InvoiceList() {
             <th scope="col">Client</th>
             <th scope="col">Date</th>
             <th scope="col">Total Amount</th>
-            <th scope="col"></th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          {invoices.map((i) => (
-            <tr>
-              <th>{i.invoice_id}</th>
-              <td>{i.client_name}</td>
-              <td>{new Date(i.date).toDateString()}</td>
-              <td>{i.totalAmount}</td>
-              <td>
-                <a href={i.invoice_id} className="btn btn-warning">
-                  Items
-                </a>
-              </td>
-            </tr>
-          ))}
+          {invoices &&
+            invoices.map((i, index) => (
+              <tr key={i.id}>
+                <th>{index + 1}</th>
+                <td>{i.client_name}</td>
+                <td>{new Date(i.date).toDateString()}</td>
+
+                <td>{i.totalAmount}</td>
+                <td>
+                  {/* {console.log(i.id)} */}
+                  <div className="btn-group">
+                    <a href={i.id} className="btn btn-warning">
+                      Items
+                    </a>
+                    <button className="btn btn-primary" type="button" onClick={() => deleteItem(i.id)}>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+
+
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

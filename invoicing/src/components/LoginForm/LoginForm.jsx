@@ -16,7 +16,7 @@ function Login() {
 
   console.log(location.pathname);
   const [user, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
   });
   function handleSubmit() {
@@ -28,21 +28,24 @@ function Login() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        // return res.json(); // Parse response as JSON
-        if (res.status === 200) {
-          localStorage.setItem("token", res.token);
-          
-          alert("Successful Logged In");
-          navigate("/");
-        } else if (res.status === 400) {
-          console.log("Unauthorized request");
-          alert("Login Error");
-        }
-      })
+    .then((res) => {
+      if (res.ok) {
+        return res.json(); // Parse response as JSON
+      } else if (res.status === 400) {
+        console.log("Unauthorized request");
+        alert("Login Error");
+        throw new Error("Unauthorized request");
+      } else {
+        console.log("Something went wrong");
+        throw new Error("Something went wrong");
+      }
+    })
       .then((data) => {
         console.log(data);
-        
+        localStorage.setItem("token", data.access); // Store the access_token in localStorage
+        localStorage.setItem("tokenExpiration",data.access);
+        alert("Successful Logged In");
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -62,8 +65,8 @@ function Login() {
       <form className="login-container">
 
         <div class="  form-outline mb-4">
-          <input type="email"  class="form-control" name="email" id="email" onChange={handleChange} value={user.email}/>
-          <label class="form-label" for="form2Example1">Email address</label>
+          <input type="`text`"  class="form-control" name="username" id="username" onChange={handleChange} value={user.username}/>
+          <label class="form-label" for="form2Example1">Username</label>
         </div>
 
 

@@ -11,9 +11,10 @@ function Register() {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
   function handleSubmit() {
+    console.log(user);
     fetch("http://127.0.0.1:8000/api/invoices/user/signup/", {
       method: "POST",
-      body: JSON.stringify(user),
+      body: JSON.stringify(user),      
       headers: {
         "Content-Type": "application/json",
       },
@@ -21,7 +22,7 @@ function Register() {
     })
       .then((res) => {
         console.log(res);
-        if (res.status === 200) {
+        if (res.status === 201) {
           alert("Successful SignUP")
           navigate("/login");
         } else if (res.status === 401) {
@@ -44,10 +45,12 @@ function Register() {
         //   lastName: '',
           email: '',
           password: '',
-          confirmPassword: ''
+          confirmPassword: '',
+          mobile_number:'',
+          username:''
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string()
+          Name: Yup.string()
             .required('First Name is required'),
           lastName: Yup.string()
             .required('Last Name is required'),
@@ -89,6 +92,22 @@ function Register() {
                 <ErrorMessage name="email" component="div" className="invalid-feedback" />
               </div>
               <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <Field name="Username" type="text" onInput={(e) => {
+                  user.username = e.target.value;
+                  setUser(user);
+                }}className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                <ErrorMessage name="username" component="div" className="invalid-feedback" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="username">Mobile Number</label>
+                <Field name="mobile_number" type="number" onInput={(e) => {
+                  user.mobile_number = e.target.value;
+                  setUser(user);
+                }}className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                <ErrorMessage name="username" component="div" className="invalid-feedback" />
+              </div>
+              <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
                 <ErrorMessage name="password" component="div" className="invalid-feedback" />
@@ -104,7 +123,7 @@ function Register() {
               
               <div className="form-group">
               {
-              user ? (<button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>Register</button>)
+              user ? (<Link type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>Register</Link>)
               : (
                 <Link className="btn btn-outline-success my-2 my-sm-0" to="/login">
                   Login
